@@ -19,7 +19,7 @@ public class EncurtadorServico {
     @Autowired
     private EncurtadorRepositorio encurtadorRepositorio;
 
-    private static final String ENCURTADOR_URL = "https://encurtador-api-ws.herokuapp.com/";
+    private static final String ENCURTADOR_URL = "https://encurtador-api-ws.herokuapp.com/url/";
 
 
     /**

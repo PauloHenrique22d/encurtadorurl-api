@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -47,10 +48,14 @@ public class UrlControle {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscaPeloCodigo(@PathVariable String id) {
+    public ResponseEntity<?> buscaPeloCodigo(@PathVariable String id,  HttpServletResponse response) throws IOException {
 
         Optional<Url> url = encurtadorServico.findById(id);
         url.stream().map(this::convertToDto).collect(Collectors.toList() ) ;
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(id).toUri();
+        response.sendRedirect(url.get().getUrlEncurtada());
+
         return url != null ? ResponseEntity.ok(url) : ResponseEntity.notFound().build();
     }
 
