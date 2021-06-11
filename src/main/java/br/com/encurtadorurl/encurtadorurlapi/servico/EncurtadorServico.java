@@ -1,12 +1,13 @@
 package br.com.encurtadorurl.encurtadorurlapi.servico;
 
-import br.com.encurtadorurl.encurtadorurlapi.conversores.IDConverter;
 import br.com.encurtadorurl.encurtadorurlapi.entidades.Url;
 import br.com.encurtadorurl.encurtadorurlapi.repositorio.EncurtadorRepositorio;
+import com.google.common.hash.Hashing;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +19,8 @@ public class EncurtadorServico {
     @Autowired
     private EncurtadorRepositorio encurtadorRepositorio;
 
-    private IDConverter converter = IDConverter.getInstance();
+    private static final String ENCURTADOR_URL = "https://encurtador-api-ws.herokuapp.com/";
 
-    private static String ENCURTADOR_URL = "encurtadorurl.com.br/";
 
     /**
      * Lista todos as urls
@@ -42,7 +42,7 @@ public class EncurtadorServico {
      * @return A url consultada
      * @throws RuntimeException
      */
-    public Optional<Url> findById(Long id) throws RuntimeException{
+    public Optional<Url> findById(String id) throws RuntimeException{
 
         Optional<Url> urls = null;
 
@@ -61,11 +61,14 @@ public class EncurtadorServico {
      * @return a url salvo
      * @throws RuntimeException
      */
-    public Url salvar(Url url) throws RuntimeException{
+    public Url salvar(final String url) throws RuntimeException{
         try {
-            url.setId(null);
-            url.setUrlEncurtada(ENCURTADOR_URL + converter.toBase62(url.getUrlOriginal()));
-            return encurtadorRepositorio.save(url);
+            Url urlObj = new Url();
+            final String id = Hashing.murmur3_32().hashString(url, StandardCharsets.UTF_8).toString();
+            urlObj.setId(id);
+            urlObj.setUrlEncurtada(ENCURTADOR_URL + id);
+            urlObj.setUrlOriginal(url);
+            return encurtadorRepositorio.save(urlObj);
         } catch (Exception e) {
             log.info("Ocorreu um erro ao salvar url");
             return new Url();

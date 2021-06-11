@@ -39,7 +39,7 @@ public class UrlControle {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Url> criar(@RequestBody Url url, HttpServletResponse response) {
-        encurtadorServico.salvar(url);
+        encurtadorServico.salvar(url.getUrlOriginal());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(url.getId())
                 .toUri();
         response.setHeader("Location", uri.toASCIIString());
@@ -47,7 +47,7 @@ public class UrlControle {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscaPeloCodigo(@PathVariable Long id) {
+    public ResponseEntity<?> buscaPeloCodigo(@PathVariable String id) {
 
         Optional<Url> url = encurtadorServico.findById(id);
         url.stream().map(this::convertToDto).collect(Collectors.toList() ) ;
