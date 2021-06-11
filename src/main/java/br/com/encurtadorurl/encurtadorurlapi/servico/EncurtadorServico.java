@@ -1,5 +1,6 @@
 package br.com.encurtadorurl.encurtadorurlapi.servico;
 
+import br.com.encurtadorurl.encurtadorurlapi.conversores.IDConverter;
 import br.com.encurtadorurl.encurtadorurlapi.entidades.Url;
 import br.com.encurtadorurl.encurtadorurlapi.repositorio.EncurtadorRepositorio;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,10 @@ public class EncurtadorServico {
 
     @Autowired
     private EncurtadorRepositorio encurtadorRepositorio;
+
+    private IDConverter converter = IDConverter.getInstance();
+
+    private static String ENCURTADOR_URL = "encurtadorurl.com.br/";
 
     /**
      * Lista todos as urls
@@ -57,15 +62,13 @@ public class EncurtadorServico {
      * @throws RuntimeException
      */
     public Url salvar(Url url) throws RuntimeException{
-
         try {
+            url.setId(null);
+            url.setUrlEncurtada(ENCURTADOR_URL + converter.toBase62(url.getUrlOriginal()));
             return encurtadorRepositorio.save(url);
         } catch (Exception e) {
             log.info("Ocorreu um erro ao salvar url");
             return new Url();
         }
     }
-
-
-
 }
