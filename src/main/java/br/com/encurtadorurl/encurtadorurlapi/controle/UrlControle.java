@@ -54,7 +54,7 @@ public class UrlControle {
         url.stream().map(this::convertToDto).collect(Collectors.toList() ) ;
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(id).toUri();
-        response.sendRedirect(url.get().getUrlEncurtada());
+        response.sendRedirect(url.get().getUrlOriginal());
 
         return url != null ? ResponseEntity.ok(url) : ResponseEntity.notFound().build();
     }
