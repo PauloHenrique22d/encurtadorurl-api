@@ -40,11 +40,12 @@ public class UrlControle {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Url> criar(@RequestBody Url url, HttpServletResponse response) {
-        encurtadorServico.salvar(url.getUrlOriginal());
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(url.getId())
+
+        Url urlSalva =  encurtadorServico.salvar(url.getUrlOriginal());
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(urlSalva.getId())
                 .toUri();
         response.setHeader("Location", uri.toASCIIString());
-        return ResponseEntity.created(uri).body(url);
+        return ResponseEntity.created(uri).body(urlSalva);
     }
 
     @GetMapping("/{id}")

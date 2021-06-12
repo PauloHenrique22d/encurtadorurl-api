@@ -1,8 +1,6 @@
 package br.com.encurtadorurl.encurtadorurlapi.entidades;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +13,7 @@ import java.util.Objects;
 @Data
 @Entity
 @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
 public class Url implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,28 +23,16 @@ public class Url implements Serializable {
     private String urlOriginal;
     private String urlEncurtada;
 
-    public String getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Url url = (Url) o;
+        return id.equals(url.id);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
-
-    public void setUrlEncurtada(String urlEncurtada) {
-        this.urlEncurtada = urlEncurtada;
-    }
-
-    public String getUrlOriginal() {
-        return urlOriginal;
-    }
-
-    public void setUrlOriginal(String urlOriginal) {
-        this.urlOriginal = urlOriginal;
-    }
-
-    public String getUrlEncurtada() {
-        return urlEncurtada;
-    }
-
-   }
+}
